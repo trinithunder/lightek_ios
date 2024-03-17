@@ -11,6 +11,10 @@
 		9923859F2BA776B1003F5D5E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9923859E2BA776B1003F5D5E /* ContentView.swift */; };
 		992385A12BA776B4003F5D5E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 992385A02BA776B4003F5D5E /* Assets.xcassets */; };
 		992385A42BA776B4003F5D5E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 992385A32BA776B4003F5D5E /* Preview Assets.xcassets */; };
+		992385AB2BA77851003F5D5E /* LTekListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992385AA2BA77850003F5D5E /* LTekListItem.swift */; };
+		992385AD2BA77BFE003F5D5E /* LTekListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992385AC2BA77BFE003F5D5E /* LTekListView.swift */; };
+		992385AF2BA78619003F5D5E /* LTekDataLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992385AE2BA78618003F5D5E /* LTekDataLayer.swift */; };
+		992385B12BA789AC003F5D5E /* LTekCollectionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992385B02BA789AC003F5D5E /* LTekCollectionsListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		9923859E2BA776B1003F5D5E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		992385A02BA776B4003F5D5E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		992385A32BA776B4003F5D5E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		992385AA2BA77850003F5D5E /* LTekListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LTekListItem.swift; path = Lightek/LTekListItem.swift; sourceTree = "<group>"; };
+		992385AC2BA77BFE003F5D5E /* LTekListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekListView.swift; sourceTree = "<group>"; };
+		992385AE2BA78618003F5D5E /* LTekDataLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekDataLayer.swift; sourceTree = "<group>"; };
+		992385B02BA789AC003F5D5E /* LTekCollectionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekCollectionsListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +43,10 @@
 		992385902BA776B1003F5D5E = {
 			isa = PBXGroup;
 			children = (
+				992385AA2BA77850003F5D5E /* LTekListItem.swift */,
+				992385AC2BA77BFE003F5D5E /* LTekListView.swift */,
+				992385B02BA789AC003F5D5E /* LTekCollectionsListView.swift */,
+				992385AE2BA78618003F5D5E /* LTekDataLayer.swift */,
 				9923859B2BA776B1003F5D5E /* Lightek */,
 				9923859A2BA776B1003F5D5E /* Products */,
 			);
@@ -137,7 +149,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				992385AF2BA78619003F5D5E /* LTekDataLayer.swift in Sources */,
+				992385AD2BA77BFE003F5D5E /* LTekListView.swift in Sources */,
+				992385AB2BA77851003F5D5E /* LTekListItem.swift in Sources */,
 				9923859F2BA776B1003F5D5E /* ContentView.swift in Sources */,
+				992385B12BA789AC003F5D5E /* LTekCollectionsListView.swift in Sources */,
 				9923859D2BA776B1003F5D5E /* LightekApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
