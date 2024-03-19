@@ -12,7 +12,7 @@ struct LTekOnboardingView: View {
         @State private var currentPageIndex = 0
         
         // Data representing the pages
-        let pages = ["Page 1", "Page 2", "Page 3"]
+        @State var pages = ["Page 1", "Page 2", "Page 3"]
     var body: some View {
         VStack(spacing:10){
             // Page view
@@ -26,7 +26,7 @@ struct LTekOnboardingView: View {
                         
                         // Page control
                         LTekPageControl(numberOfPages: pages.count, currentPageIndex: $currentPageIndex)
-                            .padding()
+                            //.padding()
             Spacer()
             Button{
                 
@@ -44,7 +44,7 @@ struct LTekOnboardingView: View {
                 Text("I have an account")
             }
             
-            Spacer().frame(height:10)
+            Spacer().frame(height:50)
             
         }
         
