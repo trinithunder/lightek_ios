@@ -11,7 +11,23 @@ struct LTekProfile: View {
     @State var items = [GateKeeper().currentUser]
     @State var isFollowing = true
     var body: some View {
-        List{
+        if User.loggedInIndex{
+           return returnListView()
+        }else{
+           return LTekLogIn()
+        }
+        
+//        ScrollView{
+//            VStack(spacing:20){
+//                Spacer().frame(height:50)
+//                GateKeeper().currentUser.userProfileImage()
+//                Text(GateKeeper().currentUser.displayName)
+//            }
+//        }
+    }
+    
+    func returnListView()->some View{
+        return List{
             ForEach(items, id: \.self){
                 item in
                 Button {
@@ -81,13 +97,6 @@ struct LTekProfile: View {
 
             }
         }
-//        ScrollView{
-//            VStack(spacing:20){
-//                Spacer().frame(height:50)
-//                GateKeeper().currentUser.userProfileImage()
-//                Text(GateKeeper().currentUser.displayName)
-//            }
-//        }
     }
 }
 

@@ -26,6 +26,10 @@ struct GateKeeper:GK{
     var currentUser = User(displayName: "Marlon", screenName: "", userImage: "https://wallpapercave.com/wp/wp3324196.jpg")
     var systemInfo = LTekSystemInfo()
     var viewMode:ViewModes = .dashboard
+    static var currentActivityStatus:Bool{
+        return User.loggedInIndex
+        
+    }
     
     func shangTsung() -> some View {
         switch viewMode {
@@ -120,6 +124,9 @@ extension User {
     static var messageIdIndex: String { "index_users_on_message_id" }
     static var productIdIndex: String { "index_users_on_product_id" }
     static var resetPasswordTokenIndex: String { "index_users_on_reset_password_token" }
+    static var loggedInIndex:Bool{
+        return false
+    }
 }
 struct ApiManager:LTekApiProtocol{
     func setData() {
