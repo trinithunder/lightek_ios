@@ -22,6 +22,7 @@
 		9970155A2BA9D89B00AE1714 /* LTekProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997015592BA9D89A00AE1714 /* LTekProfile.swift */; };
 		9970155C2BA9D99F00AE1714 /* LTekCommunity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9970155B2BA9D99F00AE1714 /* LTekCommunity.swift */; };
 		9970155E2BAA127F00AE1714 /* LTekLogIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9970155D2BAA127F00AE1714 /* LTekLogIn.swift */; };
+		99A6BBB22BAA377F00BBB4D5 /* LTekSignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A6BBB12BAA377F00BBB4D5 /* LTekSignUp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		997015592BA9D89A00AE1714 /* LTekProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekProfile.swift; sourceTree = "<group>"; };
 		9970155B2BA9D99F00AE1714 /* LTekCommunity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekCommunity.swift; sourceTree = "<group>"; };
 		9970155D2BAA127F00AE1714 /* LTekLogIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekLogIn.swift; sourceTree = "<group>"; };
+		99A6BBB12BAA377F00BBB4D5 /* LTekSignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekSignUp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 			children = (
 				9970155B2BA9D99F00AE1714 /* LTekCommunity.swift */,
 				9970155D2BAA127F00AE1714 /* LTekLogIn.swift */,
+				99A6BBB12BAA377F00BBB4D5 /* LTekSignUp.swift */,
 				997015572BA9CAB300AE1714 /* LTekHomeHub.swift */,
 				997015592BA9D89A00AE1714 /* LTekProfile.swift */,
 				997015552BA8E4DA00AE1714 /* LTekPageControl.swift */,
@@ -171,6 +174,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				992385AF2BA78619003F5D5E /* LTekDataLayer.swift in Sources */,
+				99A6BBB22BAA377F00BBB4D5 /* LTekSignUp.swift in Sources */,
 				992385AD2BA77BFE003F5D5E /* LTekListView.swift in Sources */,
 				992385AB2BA77851003F5D5E /* LTekListItem.swift in Sources */,
 				997015562BA8E4DB00AE1714 /* LTekPageControl.swift in Sources */,

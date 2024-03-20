@@ -125,7 +125,7 @@ extension User {
     static var productIdIndex: String { "index_users_on_product_id" }
     static var resetPasswordTokenIndex: String { "index_users_on_reset_password_token" }
     static var loggedInIndex:Bool{
-        return false
+        return true
     }
 }
 struct ApiManager:LTekApiProtocol{

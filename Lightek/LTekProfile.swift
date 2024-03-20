@@ -10,23 +10,18 @@ import SwiftUI
 struct LTekProfile: View {
     @State var items = [GateKeeper().currentUser]
     @State var isFollowing = true
+    @State var loggedInIndex = User.loggedInIndex
     var body: some View {
-        if User.loggedInIndex{
-           return returnListView()
-        }else{
-           return LTekLogIn()
-        }
         
-//        ScrollView{
-//            VStack(spacing:20){
-//                Spacer().frame(height:50)
-//                GateKeeper().currentUser.userProfileImage()
-//                Text(GateKeeper().currentUser.displayName)
-//            }
-//        }
+        if loggedInIndex{
+           returnListView()
+        }else{
+           LTekLogIn()
+        }
     }
     
     func returnListView()->some View{
+        //TODO: - Re design this whole profile template
         return List{
             ForEach(items, id: \.self){
                 item in
