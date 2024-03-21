@@ -111,6 +111,19 @@ struct User:GK{
             ProgressView()
         }
     }
+    func userProfileHeaderBG()->some View{
+        AsyncImage(url: URL(string: "https://media.istockphoto.com/id/502846306/photo/lower-manhattan-skyline.jpg?s=612x612&w=0&k=20&c=RdzbupJ24bBmg9_17nxvOqdpMjhZMw78Pb3QlxgSIV8=")) { image in
+            image
+                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 325, height: 271)
+                                .clipShape(Rectangle())
+                                .overlay(Rectangle().strokeBorder(Color.white, lineWidth: borderWidth))
+                                .padding(.top,20)
+        } placeholder: {
+            ProgressView()
+        }
+    }
     
     
 }

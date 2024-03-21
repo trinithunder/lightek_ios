@@ -11,6 +11,7 @@ struct LTekProfile: View {
     @State var items = [GateKeeper().currentUser]
     @State var isFollowing = true
     @State var loggedInIndex = User.loggedInIndex
+    @State var hasNotifications = false
     var body: some View {
         
         if loggedInIndex{
@@ -28,6 +29,63 @@ struct LTekProfile: View {
                 Button {
                     // Going to do something here with workFlow
                 } label: {
+                    HStack{
+                        Image(systemName:"arrow.left")
+                        Text(item.displayName)
+                            .foregroundColor(.black)
+                            .font(.system(size:20))
+                            .padding(.trailing,10)
+                        Spacer()
+                        Image(systemName:"message")
+                        Image(systemName:hasNotifications ? "bell.badge":"bell")
+                        Image(systemName:"ellipsis.circle")
+                    }
+                    HStack{
+                        item.userProfileHeaderBG().overlay(VStack{
+                            Spacer()
+                            item.userAvatar()
+                            
+                        })
+                    }
+                    HStack{
+                        Text(item.userName ?? "@haveyec")
+                            .foregroundColor(.black)
+                        Image(systemName:"qrcode")
+                            .foregroundColor(.orange)
+                    }
+                    HStack{
+                        Text(item.bio ?? "I run shit")
+                            .foregroundColor(.black)
+                    }
+                    HStack{
+                        VStack{
+                            Text(item.bio ?? "897")
+                                .foregroundColor(.black)
+                            Text(item.bio ?? "Posts")
+                                .foregroundColor(.black)
+                        }
+                        
+                        VStack{
+                            Text(item.bio ?? "8970")
+                                .foregroundColor(.black)
+                            Text(item.bio ?? "Followers")
+                                .foregroundColor(.black)
+                        }
+                        
+                        VStack{
+                            Text(item.bio ?? "897")
+                                .foregroundColor(.black)
+                            Text(item.bio ?? "Following")
+                                .foregroundColor(.black)
+                        }
+                        
+                        VStack{
+                            Text(item.bio ?? "10897")
+                                .foregroundColor(.black)
+                            Text(item.bio ?? "Likes")
+                                .foregroundColor(.black)
+                        }
+                    }
                     HStack{
                         item.userAvatar()
                             .padding(.trailing,5)
