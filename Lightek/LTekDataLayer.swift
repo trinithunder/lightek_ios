@@ -7,11 +7,11 @@
 
 import Foundation
 import SwiftUI
+typealias T = User
+
 protocol LTekApiProtocol:GK {
-    func setData()
-    func readData()
-    
-    
+    func setData(collection: String,params:[String:Any],image: UIImage?)
+    func readData<T: Codable>(forType type: T.Type, fromCollection collection: String, completion: @escaping ([T]?, Error?) -> Void)
 }
 protocol ApiStructure{
     var baseUrl: String { get set }
@@ -23,7 +23,7 @@ enum ViewModes:GK {
 case dashboard
 }
 struct GateKeeper:GK{
-    var currentUser = User(displayName: "Marlon", screenName: "", userImage: "https://wallpapercave.com/wp/wp3324196.jpg")
+    var currentUser = User(displayName: "Marlon", screenName: "", userImage: "https://wallpapercave.com/wp/wp3324196.jpg") //<--we need to filter out the array of users that User.loadThatJSON returns by user ID
     var systemInfo = LTekSystemInfo()
     var viewMode:ViewModes = .dashboard
     static var currentActivityStatus:Bool{
@@ -125,6 +125,20 @@ struct User:GK{
         }
     }
     
+    func postData(){
+        
+    }
+    
+    func loadThatJson()->[User]{
+        var arrayOfUser = [User]()
+        apiManager.readData(forType: User.self, fromCollection: "user") { codableOb, error in
+            //Do some work here
+            guard let userArr = codableOb else { return }
+            arrayOfUser = userArr
+        }
+        return arrayOfUser
+    }
+    
     
 }
 extension User {
@@ -141,17 +155,189 @@ extension User {
         return true
     }
 }
+struct Firestore:GK {
+    static let storageUrl = "https://miquel-b7eaf-default-rtdb.firebaseio.com/images/"
+    static let firebaseImgUrl = "https://miquel-b7eaf-default-rtdb.firebaseio.com/images/"
+    static let firestoreUrl = "https://firestore.googleapis.com/v1/projects/miquel-b7eaf/databases/(default)/documents/"
+    static let apiKey = "AIzaSyCXStMVELLq3mOJ5jJ8g9XO2aHlt5Hvbo4"
+}
 struct ApiManager:LTekApiProtocol{
-    func setData() {
-        //
+    func readData<T>(forType type: T.Type, fromCollection collection: String, completion: @escaping ([T]?, Error?) -> Void) where T : Decodable, T : Encodable {
+        // Construct Firestore URL for fetching data
+        let firestoreUrl = "\(Firestore.firestoreUrl)\(collection)?key=\(Firestore.apiKey)"
+        
+        // Create URL request
+        guard let url = URL(string: firestoreUrl) else {
+            completion(nil, URLError(.badURL))
+            return
+        }
+        
+        // Perform the request
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            // Check for error
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            // Check for response status
+            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                completion(nil, NSError(domain: "HTTPError", code: (response as? HTTPURLResponse)?.statusCode ?? 0, userInfo: nil))
+                return
+            }
+            
+            // Check for data
+            guard let data = data else {
+                completion(nil, NSError(domain: "NoDataError", code: 0, userInfo: nil))
+                return
+            }
+            
+            // Decode JSON data into [T] array
+            do {
+                let objects = try JSONDecoder().decode([String: T].self, from: data).compactMap { $0.value }
+                completion(objects, nil)
+            } catch {
+                completion(nil, error)
+            }
+        }.resume()
     }
     
-    func readData() {
-        //
+    func setData(collection: String, params: [String: Any], image: UIImage? = nil) {
+        // Upload image if provided
+        if let image = image {
+            uploadImageToFirebase(image) { imageUrl in
+                var updatedParams = params
+                updatedParams["imageUrl"] = imageUrl
+                postDataToFirestore(collection: collection, data: updatedParams)
+            }
+        } else {
+            // No image provided, post data to Firestore directly
+            postDataToFirestore(collection: collection, data: params)
+        }
+    }
+
+    private func uploadImageToFirebase(_ image: UIImage, completion: @escaping (String?) -> Void) {
+        // Convert image to Data
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            print("Failed to convert image to data")
+            completion(nil)
+            return
+        }
+
+        // Generate a unique filename
+        let filename = UUID().uuidString + ".jpg"
+
+        // Firebase Storage URL for uploading
+        let storageUrl = "\(Firestore.storageUrl)\(filename)"
+
+        // Create a URL request
+        var request = URLRequest(url: URL(string: storageUrl)!)
+        request.httpMethod = "PUT"
+        request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+        request.httpBody = imageData
+
+        // Perform the request
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                print("Error uploading image: \(error?.localizedDescription ?? "Unknown error")")
+                completion(nil)
+                return
+            }
+
+            // If the upload is successful, construct the image URL
+            let imageUrl = "\(Firestore.firebaseImgUrl)\(filename)"
+            completion(imageUrl)
+        }
+        task.resume()
+    }
+
+    private func postDataToFirestore(collection: String, data: [String: Any]) {
+        // Convert parameters to JSON data
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: data) else {
+            print("Failed to serialize parameters into JSON")
+            return
+        }
+
+        // Construct Firestore URL for posting data
+        let firestoreUrl = "\(Firestore.firestoreUrl)\(collection)?key=\(Firestore.apiKey)"
+
+        // Create a URL request
+        var request = URLRequest(url: URL(string: firestoreUrl)!)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+
+        // Perform the request
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+
+            if let data = data {
+                // Handle response data if needed
+                if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
+                    print("Response JSON: \(json)")
+                }
+            }
+        }
+        task.resume()
     }
     
+//    func readData<T: Codable>(forType type: T.Type, fromCollection collection: String, completion: @escaping ([T]?, Error?) -> Void) {
+//        // Construct Firestore URL for fetching data
+//        let firestoreUrl = "https://firestore.googleapis.com/v1/projects/miquel-b7eaf/databases/(default)/documents/\(collection)?key=your_api_key"
+//
+//        // Create URL request
+//        guard let url = URL(string: firestoreUrl) else {
+//            completion(nil, URLError(.badURL))
+//            return
+//        }
+//
+//        // Perform the request
+//        URLSession.shared.dataTask(with: url) { data, response, error in
+//            // Check for error
+//            if let error = error {
+//                completion(nil, error)
+//                return
+//            }
+//
+//            // Check for response status
+//            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+//                completion(nil, NSError(domain: "HTTPError", code: (response as? HTTPURLResponse)?.statusCode ?? 0, userInfo: nil))
+//                return
+//            }
+//
+//            // Check for data
+//            guard let data = data else {
+//                completion(nil, NSError(domain: "NoDataError", code: 0, userInfo: nil))
+//                return
+//            }
+//
+//            // Decode JSON data into [T] array
+//            do {
+//                let objects = try JSONDecoder().decode([String: T].self, from: data).compactMap { $0.value }
+//                completion(objects, nil)
+//            } catch {
+//                completion(nil, error)
+//            }
+//        }.resume()
+//    }
+    
+     // Define method to fetch user data from Firestore
+    // Define method to fetch data from Firestore
+
+    // Example usage:
+//    let firestoreCollection = "your_collection_name"
+//    let imageData = UIImage(named: "your_image.png") // Replace "your_image.png" with the name of your image file
+//    let dataParams: [String: Any] = ["key1": "value1", "key2": "value2"] // Replace with your data parameters
+//
+//    setData(collection: "", params: dataParams, image: imageData)
    
 }
+
 struct ActiveStorageAttachmentForeignKey {
     var blobId: Int
 }
