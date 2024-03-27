@@ -20,7 +20,7 @@ struct LTekListView: View {
                     //
                 } label: {
                     HStack{
-                        AsyncImage(url: URL(string: item.userImage)) { image in
+                        AsyncImage(url: URL(string: item.userImage!)) { image in
                             image
                                 .resizable()
                                                 .aspectRatio(contentMode: .fill)
@@ -34,8 +34,8 @@ struct LTekListView: View {
 
 
                         VStack{
-                            Text(item.displayName)
-                            Text(item.screenName)
+                            Text(item.displayName!)
+                            Text(item.screenName!)
                         }
                         Spacer()
                         Image(systemName: "chevron.right.circle")

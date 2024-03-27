@@ -22,7 +22,7 @@ struct LTekCollectionsListView: View {
                         item.userAvatar()
                             .padding(.trailing,5)
                         VStack(spacing:10){
-                            Text(item.displayName)
+                            Text(item.displayName!)
                                 .foregroundColor(.black)
                                 .font(.system(size:12))
                                 .padding(.trailing,10)

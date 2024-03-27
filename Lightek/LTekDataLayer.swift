@@ -9,6 +9,23 @@ import Foundation
 import SwiftUI
 typealias T = User
 
+class Gate_Keeper: ObservableObject {
+    @Published var currentUser = ""
+}
+
+struct FirebaseResponse: Codable {
+    let kind: String
+    let localId: String
+    let email: String
+    let displayName: String?
+    let idToken:String
+    let registered:Bool
+    let refreshToken:String
+    let expiresIn:String
+    // Add other properties as needed
+}
+
+
 protocol LTekApiProtocol:GK {
     func setData(collection: String,params:[String:Any],image: UIImage?)
     func readData<T: Codable>(forType type: T.Type, fromCollection collection: String, completion: @escaping ([T]?, Error?) -> Void)
@@ -50,9 +67,9 @@ struct LTekSystemInfo:GK {
     }
 struct User:GK{
     var id = UUID().uuidString
-    var displayName:String
-    var screenName:String
-    var userImage:String
+    var displayName:String?
+    var screenName:String?
+    var userImage:String?
     var borderWidth: CGFloat = 0.3
     var apiManager = ApiManager()
     var firstName: String?
@@ -73,7 +90,7 @@ struct User:GK{
     var relationships = RelationshipManager()
     
     func userAvatar()->some View{
-        AsyncImage(url: URL(string: userImage)) { image in
+        AsyncImage(url: URL(string: userImage!)) { image in
             image
                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -86,7 +103,7 @@ struct User:GK{
     }
     
     func userProfileImage()->some View{
-        AsyncImage(url: URL(string: userImage)) { image in
+        AsyncImage(url: URL(string: userImage!)) { image in
             image
                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -99,7 +116,7 @@ struct User:GK{
     }
     
     func userContent()->some View{
-        AsyncImage(url: URL(string: userImage)) { image in
+        AsyncImage(url: URL(string: userImage!)) { image in
             image
                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -139,6 +156,85 @@ struct User:GK{
         return arrayOfUser
     }
     
+    func signInUser(email:String,password:String,gk:Gate_Keeper){
+        let signInUrl = URL(string: "\(Firestore.signInURL)?key=\(Firestore.apiKey)")!
+        
+        let parameters = "{\n  \"email\": \"\(email)\",\n  \"password\": \"\(password)\",\n  \"returnSecureToken\": true\n}\n"
+        let postData = parameters.data(using: .utf8)
+
+        var request = URLRequest(url:signInUrl,timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        request.httpMethod = "POST"
+        request.httpBody = postData
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+          guard let data = data else {
+            print(String(describing: error))
+            return
+          }
+          print(String(data: data, encoding: .utf8)!)
+            //so in here we need to set "currentUser" with localID in GateKeeper env object
+            // Assuming `data` is the JSON data received from Firebase
+            do {
+                let decoder = JSONDecoder()
+                let response = try decoder.decode(FirebaseResponse.self, from: data)
+                let localId = response.localId
+                DispatchQueue.main.async {
+                    gk.currentUser = localId
+                    print("localId:", gk.currentUser)
+                }
+                
+                
+            } catch {
+                print("Error decoding JSON:", error)
+            }
+
+        }
+
+        task.resume()
+
+    }
+    
+    func createUser(email:String,password:String,gk:Gate_Keeper,completion:()->()){
+        let signUpUrl = URL(string: "\(Firestore.signInURL)?key=\(Firestore.apiKey)")!
+        
+        let parameters = "{\n  \"email\": \"\(email)\",\n  \"password\": \"\(password)\",\n  \"returnSecureToken\": true\n}\n"
+        let postData = parameters.data(using: .utf8)
+
+        var request = URLRequest(url:signUpUrl,timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        request.httpMethod = "POST"
+        request.httpBody = postData
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+          guard let data = data else {
+            print(String(describing: error))
+            return
+          }
+          print(String(data: data, encoding: .utf8)!)
+            do {
+                let decoder = JSONDecoder()
+                let response = try decoder.decode(FirebaseResponse.self, from: data)
+                let localId = response.localId
+                let dataObjectForCloud:[String:Any] = ["userID":localId,"email":response.email]
+                apiManager.postDataToFirestore(collection: "User", data: dataObjectForCloud)
+                DispatchQueue.main.async {
+                    gk.currentUser = localId
+                    print("localId:", gk.currentUser)
+                }
+                
+                
+            } catch {
+                print("Error decoding JSON:", error)
+            }
+
+        }
+
+        task.resume()
+    }
+    
     
 }
 extension User {
@@ -160,6 +256,8 @@ struct Firestore:GK {
     static let firebaseImgUrl = "https://miquel-b7eaf-default-rtdb.firebaseio.com/images/"
     static let firestoreUrl = "https://firestore.googleapis.com/v1/projects/miquel-b7eaf/databases/(default)/documents/"
     static let apiKey = "AIzaSyCXStMVELLq3mOJ5jJ8g9XO2aHlt5Hvbo4"
+    static let signInURL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword"
+    static let signUpURL = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{apiKey}}"
 }
 struct ApiManager:LTekApiProtocol{
     func readData<T>(forType type: T.Type, fromCollection collection: String, completion: @escaping ([T]?, Error?) -> Void) where T : Decodable, T : Encodable {
@@ -252,7 +350,7 @@ struct ApiManager:LTekApiProtocol{
         task.resume()
     }
 
-    private func postDataToFirestore(collection: String, data: [String: Any]) {
+     func postDataToFirestore(collection: String, data: [String: Any]) {
         // Convert parameters to JSON data
         guard let jsonData = try? JSONSerialization.data(withJSONObject: data) else {
             print("Failed to serialize parameters into JSON")
@@ -285,56 +383,6 @@ struct ApiManager:LTekApiProtocol{
         }
         task.resume()
     }
-    
-//    func readData<T: Codable>(forType type: T.Type, fromCollection collection: String, completion: @escaping ([T]?, Error?) -> Void) {
-//        // Construct Firestore URL for fetching data
-//        let firestoreUrl = "https://firestore.googleapis.com/v1/projects/miquel-b7eaf/databases/(default)/documents/\(collection)?key=your_api_key"
-//
-//        // Create URL request
-//        guard let url = URL(string: firestoreUrl) else {
-//            completion(nil, URLError(.badURL))
-//            return
-//        }
-//
-//        // Perform the request
-//        URLSession.shared.dataTask(with: url) { data, response, error in
-//            // Check for error
-//            if let error = error {
-//                completion(nil, error)
-//                return
-//            }
-//
-//            // Check for response status
-//            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-//                completion(nil, NSError(domain: "HTTPError", code: (response as? HTTPURLResponse)?.statusCode ?? 0, userInfo: nil))
-//                return
-//            }
-//
-//            // Check for data
-//            guard let data = data else {
-//                completion(nil, NSError(domain: "NoDataError", code: 0, userInfo: nil))
-//                return
-//            }
-//
-//            // Decode JSON data into [T] array
-//            do {
-//                let objects = try JSONDecoder().decode([String: T].self, from: data).compactMap { $0.value }
-//                completion(objects, nil)
-//            } catch {
-//                completion(nil, error)
-//            }
-//        }.resume()
-//    }
-    
-     // Define method to fetch user data from Firestore
-    // Define method to fetch data from Firestore
-
-    // Example usage:
-//    let firestoreCollection = "your_collection_name"
-//    let imageData = UIImage(named: "your_image.png") // Replace "your_image.png" with the name of your image file
-//    let dataParams: [String: Any] = ["key1": "value1", "key2": "value2"] // Replace with your data parameters
-//
-//    setData(collection: "", params: dataParams, image: imageData)
    
 }
 

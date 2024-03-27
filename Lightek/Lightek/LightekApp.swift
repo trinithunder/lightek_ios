@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct LightekApp: App {
+    let gateKeeper = Gate_Keeper()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LTekLogIn().environmentObject(gateKeeper)
         }
     }
 }

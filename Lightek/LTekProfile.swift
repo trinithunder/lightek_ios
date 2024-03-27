@@ -32,7 +32,7 @@ struct LTekProfile: View {
                     Group{
                         HStack{
                             Image(systemName:"arrow.left")
-                            Text(item.displayName)
+                            Text(item.displayName!)
                                 .foregroundColor(.black)
                                 .font(.system(size:20))
                                 .padding(.trailing,10)
@@ -103,7 +103,7 @@ struct LTekProfile: View {
                 item.userAvatar()
                     .padding(.trailing,5)
                 VStack(spacing:10){
-                    Text(item.displayName)
+                    Text(item.displayName!)
                         .foregroundColor(.black)
                         .font(.system(size:12))
                         .padding(.trailing,10)

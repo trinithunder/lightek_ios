@@ -14,6 +14,8 @@ struct LTekLogIn: View {
     @State var email = ""
     @State var password = ""
     @State var isSignUpVisible = false
+    @State var user = User()
+    @EnvironmentObject var gk:Gate_Keeper
     var body: some View {
         ScrollView{
             VStack(spacing:20){
@@ -78,7 +80,7 @@ struct LTekLogIn: View {
                 Spacer().frame(height:20)
                 Group{
                     Button{
-                    
+                        user.signInUser(email: email, password: password, gk: gk)
                 }label:{
                     RoundedRectangle(cornerRadius: 5)
                         .foregroundColor(.orange)

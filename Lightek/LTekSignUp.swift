@@ -9,9 +9,12 @@ import SwiftUI
 
 struct LTekSignUp: View {
     @Binding var isSignUpVisible:Bool
-    @State var name = ""
     @State var email = ""
     @State var password = ""
+    @State var user = User()
+    @EnvironmentObject var gk:Gate_Keeper
+    @State var isTACVisible = false
+    @State var isPrivacyPolVisible = false
     var body: some View {
         ScrollView{
             VStack{
@@ -34,16 +37,6 @@ struct LTekSignUp: View {
                         .stroke(.orange,lineWidth: 1)
                         .frame(width:UIScreen.main.bounds.width - 20,height: 44)
                         .overlay(
-                            TextField("Name", text: $name)
-                                .padding(.leading,10)
-                        )
-                    Spacer().frame(height:30)
-                }
-                Group{
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(.orange,lineWidth: 1)
-                        .frame(width:UIScreen.main.bounds.width - 20,height: 44)
-                        .overlay(
                             TextField("Email", text: $email)
                                 .padding(.leading,10)
                         )
@@ -61,18 +54,38 @@ struct LTekSignUp: View {
                 }
                 
                 Group{
+                    Button{
+                        user.createUser(email: email, password: password, gk: gk) {
+                            isSignUpVisible.toggle()
+                        }
+                }label:{
+                    RoundedRectangle(cornerRadius: 5)
+                        .foregroundColor(.orange)
+                        .frame(width: UIScreen.main.bounds.width - 20, height: 58)
+                        .overlay(Text("Create account")
+                                    .foregroundColor(.white)
+                        )
+                }
+                    
+                }
+                
+                Group{
                         Text("By creating an account, you agree to LTek")
                     HStack{
                         Button{
-                            
+                            isTACVisible.toggle()
                         }label:{
                             Text("Terms and Conditions")
+                        }.fullScreenCover(isPresented: $isTACVisible, onDismiss: nil) {
+                            LTekTACView()
                         }
                         Text("and")
                         Button{
-                            
+                            isPrivacyPolVisible.toggle()
                         }label:{
                             Text("Privacy Policy")
+                        }.fullScreenCover(isPresented: $isPrivacyPolVisible, onDismiss: nil) {
+                            LTekPrivacyPolicyView()
                         }
                     }
                     
