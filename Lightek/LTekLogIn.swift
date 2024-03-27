@@ -25,25 +25,25 @@ struct LTekLogIn: View {
                         Spacer().frame(width:20)
                         RoundedRectangle(cornerRadius: 5)
                             .frame(width: 45, height: 45)
-                            .foregroundColor(.orange)
+                            .foregroundColor(Color("AccentColor"))
                             .shadow(color: .black, radius: 5, x: 0.5, y: 0.5)
                             .overlay(Image(systemName: "arrow.left")
                                         .foregroundColor(.white))
                         Spacer()
                     }
                     Text("Hello again!").font(.largeTitle)
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color("AccentColor"))
                     Text("Sign in to your account").font(.subheadline)
                         .foregroundColor(.gray)
                     RoundedRectangle(cornerRadius: 5)
                 
-                    .stroke(Color.orange, lineWidth: 1) // Add orange border with 1px width
+                    .stroke(Color("AccentColor"), lineWidth: 1) // Add orange border with 1px width
                     .frame(width: 325,
                            height: 69)
                     .overlay(VStack{
                         HStack{
                             Text("Email address:")
-                                .foregroundColor(.orange)
+                                .foregroundColor(Color("AccentColor"))
                                 .padding(.leading,10)
                             Spacer()
                         }
@@ -54,12 +54,12 @@ struct LTekLogIn: View {
                 }
                 Group{
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.orange, lineWidth: 1) // Add green border with 1px width
+                        .stroke(Color("AccentColor"), lineWidth: 1) // Add green border with 1px width
                         .frame(width: 325,
                                height: 69)
                         .overlay(
                             SecureField("Password", text: $password)
-                                .foregroundColor(.orange)
+                                .foregroundColor(Color("AccentColor"))
                                 .padding(.leading,10)
                         )
                 }
@@ -83,7 +83,7 @@ struct LTekLogIn: View {
                         user.signInUser(email: email, password: password, gk: gk)
                 }label:{
                     RoundedRectangle(cornerRadius: 5)
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color("AccentColor"))
                         .frame(width: UIScreen.main.bounds.width - 20, height: 58)
                         .overlay(Text("Sign in")
                                     .foregroundColor(.white)

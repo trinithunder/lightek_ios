@@ -15,6 +15,7 @@
 		992385AD2BA77BFE003F5D5E /* LTekListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992385AC2BA77BFE003F5D5E /* LTekListView.swift */; };
 		992385AF2BA78619003F5D5E /* LTekDataLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992385AE2BA78618003F5D5E /* LTekDataLayer.swift */; };
 		992385B12BA789AC003F5D5E /* LTekCollectionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992385B02BA789AC003F5D5E /* LTekCollectionsListView.swift */; };
+		995B4AC72BB469160074FDEC /* LTekLaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995B4AC62BB469160074FDEC /* LTekLaunchView.swift */; };
 		995FC9452BACD64C00CB0E54 /* LTekProfileModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995FC9442BACD64C00CB0E54 /* LTekProfileModelView.swift */; };
 		997015522BA7A9CC00AE1714 /* LTekOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997015512BA7A9CC00AE1714 /* LTekOnboardingView.swift */; };
 		997015542BA8B7F800AE1714 /* LTekPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 997015532BA8B7F700AE1714 /* LTekPageView.swift */; };
@@ -38,6 +39,7 @@
 		992385AC2BA77BFE003F5D5E /* LTekListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekListView.swift; sourceTree = "<group>"; };
 		992385AE2BA78618003F5D5E /* LTekDataLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekDataLayer.swift; sourceTree = "<group>"; };
 		992385B02BA789AC003F5D5E /* LTekCollectionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekCollectionsListView.swift; sourceTree = "<group>"; };
+		995B4AC62BB469160074FDEC /* LTekLaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekLaunchView.swift; sourceTree = "<group>"; };
 		995FC9442BACD64C00CB0E54 /* LTekProfileModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekProfileModelView.swift; sourceTree = "<group>"; };
 		997015512BA7A9CC00AE1714 /* LTekOnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekOnboardingView.swift; sourceTree = "<group>"; };
 		997015532BA8B7F700AE1714 /* LTekPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LTekPageView.swift; sourceTree = "<group>"; };
@@ -65,6 +67,8 @@
 		992385902BA776B1003F5D5E = {
 			isa = PBXGroup;
 			children = (
+				995B4AC82BB476CD0074FDEC /* Course */,
+				995B4AC62BB469160074FDEC /* LTekLaunchView.swift */,
 				995FC9442BACD64C00CB0E54 /* LTekProfileModelView.swift */,
 				9970155B2BA9D99F00AE1714 /* LTekCommunity.swift */,
 				9970155D2BAA127F00AE1714 /* LTekLogIn.swift */,
@@ -110,6 +114,13 @@
 				992385A32BA776B4003F5D5E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		995B4AC82BB476CD0074FDEC /* Course */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Course;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,6 +208,7 @@
 				992385B12BA789AC003F5D5E /* LTekCollectionsListView.swift in Sources */,
 				997015582BA9CAB500AE1714 /* LTekHomeHub.swift in Sources */,
 				9970155E2BAA127F00AE1714 /* LTekLogIn.swift in Sources */,
+				995B4AC72BB469160074FDEC /* LTekLaunchView.swift in Sources */,
 				9923859D2BA776B1003F5D5E /* LightekApp.swift in Sources */,
 				997038ED2BB3C58D00766442 /* LTekTACView.swift in Sources */,
 			);

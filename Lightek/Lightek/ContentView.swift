@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var gk:Gate_Keeper
     var body: some View {
-        GateKeeper().shangTsung()
+        GateKeeper().shangTsung().blur(radius: gk.showBlur ? 100:0)
     }
 }
 

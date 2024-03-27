@@ -11,6 +11,8 @@ typealias T = User
 
 class Gate_Keeper: ObservableObject {
     @Published var currentUser = ""
+    @Published var isActive = false
+    @Published var showBlur = false
 }
 
 struct FirebaseResponse: Codable {
@@ -37,7 +39,7 @@ protocol GK:Codable,Hashable {
     
 }
 enum ViewModes:GK {
-case dashboard
+    case dashboard
 }
 struct GateKeeper:GK{
     var currentUser = User(displayName: "Marlon", screenName: "", userImage: "https://wallpapercave.com/wp/wp3324196.jpg") //<--we need to filter out the array of users that User.loadThatJSON returns by user ID
@@ -58,13 +60,13 @@ struct GateKeeper:GK{
 }
 struct LTekSystemInfo:GK {
     var name = ""
-        var model = ""
-        var system_name = ""
-        var system_version = ""
-        var identifier_for_vendor = ""
-        var localized_model = ""
-        var user_interface_idiom = ""
-    }
+    var model = ""
+    var system_name = ""
+    var system_version = ""
+    var identifier_for_vendor = ""
+    var localized_model = ""
+    var user_interface_idiom = ""
+}
 struct User:GK{
     var id = UUID().uuidString
     var displayName:String?
@@ -93,10 +95,10 @@ struct User:GK{
         AsyncImage(url: URL(string: userImage!)) { image in
             image
                 .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                                .overlay(Circle().strokeBorder(Color.white, lineWidth: borderWidth))
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 50, height: 50)
+                .clipShape(Circle())
+                .overlay(Circle().strokeBorder(Color.white, lineWidth: borderWidth))
         } placeholder: {
             ProgressView()
         }
@@ -106,10 +108,10 @@ struct User:GK{
         AsyncImage(url: URL(string: userImage!)) { image in
             image
                 .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 150, height: 150)
-                                .clipShape(Circle())
-                                .overlay(Circle().strokeBorder(Color.white, lineWidth: borderWidth))
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 150, height: 150)
+                .clipShape(Circle())
+                .overlay(Circle().strokeBorder(Color.white, lineWidth: borderWidth))
         } placeholder: {
             ProgressView()
         }
@@ -119,11 +121,11 @@ struct User:GK{
         AsyncImage(url: URL(string: userImage!)) { image in
             image
                 .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 325, height: 271)
-                                .clipShape(Rectangle())
-                                .overlay(Rectangle().strokeBorder(Color.white, lineWidth: borderWidth))
-                                .padding(.top,20)
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 325, height: 271)
+                .clipShape(Rectangle())
+                .overlay(Rectangle().strokeBorder(Color.white, lineWidth: borderWidth))
+                .padding(.top,20)
         } placeholder: {
             ProgressView()
         }
@@ -132,11 +134,11 @@ struct User:GK{
         AsyncImage(url: URL(string: "https://media.istockphoto.com/id/502846306/photo/lower-manhattan-skyline.jpg?s=612x612&w=0&k=20&c=RdzbupJ24bBmg9_17nxvOqdpMjhZMw78Pb3QlxgSIV8=")) { image in
             image
                 .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 325, height: 271)
-                                .clipShape(Rectangle())
-                                .overlay(Rectangle().strokeBorder(Color.white, lineWidth: borderWidth))
-                                .padding(.top,20)
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 325, height: 271)
+                .clipShape(Rectangle())
+                .overlay(Rectangle().strokeBorder(Color.white, lineWidth: borderWidth))
+                .padding(.top,20)
         } placeholder: {
             ProgressView()
         }
@@ -161,19 +163,19 @@ struct User:GK{
         
         let parameters = "{\n  \"email\": \"\(email)\",\n  \"password\": \"\(password)\",\n  \"returnSecureToken\": true\n}\n"
         let postData = parameters.data(using: .utf8)
-
+        
         var request = URLRequest(url:signInUrl,timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
         request.httpMethod = "POST"
         request.httpBody = postData
-
+        
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-          guard let data = data else {
-            print(String(describing: error))
-            return
-          }
-          print(String(data: data, encoding: .utf8)!)
+            guard let data = data else {
+                print(String(describing: error))
+                return
+            }
+            print(String(data: data, encoding: .utf8)!)
             //so in here we need to set "currentUser" with localID in GateKeeper env object
             // Assuming `data` is the JSON data received from Firebase
             do {
@@ -189,11 +191,11 @@ struct User:GK{
             } catch {
                 print("Error decoding JSON:", error)
             }
-
+            
         }
-
+        
         task.resume()
-
+        
     }
     
     func createUser(email:String,password:String,gk:Gate_Keeper,completion:()->()){
@@ -201,19 +203,19 @@ struct User:GK{
         
         let parameters = "{\n  \"email\": \"\(email)\",\n  \"password\": \"\(password)\",\n  \"returnSecureToken\": true\n}\n"
         let postData = parameters.data(using: .utf8)
-
+        
         var request = URLRequest(url:signUpUrl,timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
         request.httpMethod = "POST"
         request.httpBody = postData
-
+        
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-          guard let data = data else {
-            print(String(describing: error))
-            return
-          }
-          print(String(data: data, encoding: .utf8)!)
+            guard let data = data else {
+                print(String(describing: error))
+                return
+            }
+            print(String(data: data, encoding: .utf8)!)
             do {
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(FirebaseResponse.self, from: data)
@@ -229,9 +231,9 @@ struct User:GK{
             } catch {
                 print("Error decoding JSON:", error)
             }
-
+            
         }
-
+        
         task.resume()
     }
     
@@ -313,7 +315,7 @@ struct ApiManager:LTekApiProtocol{
             postDataToFirestore(collection: collection, data: params)
         }
     }
-
+    
     private func uploadImageToFirebase(_ image: UIImage, completion: @escaping (String?) -> Void) {
         // Convert image to Data
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
@@ -321,59 +323,59 @@ struct ApiManager:LTekApiProtocol{
             completion(nil)
             return
         }
-
+        
         // Generate a unique filename
         let filename = UUID().uuidString + ".jpg"
-
+        
         // Firebase Storage URL for uploading
         let storageUrl = "\(Firestore.storageUrl)\(filename)"
-
+        
         // Create a URL request
         var request = URLRequest(url: URL(string: storageUrl)!)
         request.httpMethod = "PUT"
         request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
         request.httpBody = imageData
-
+        
         // Perform the request
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode == 200 else {
-                print("Error uploading image: \(error?.localizedDescription ?? "Unknown error")")
-                completion(nil)
-                return
-            }
-
+                      print("Error uploading image: \(error?.localizedDescription ?? "Unknown error")")
+                      completion(nil)
+                      return
+                  }
+            
             // If the upload is successful, construct the image URL
             let imageUrl = "\(Firestore.firebaseImgUrl)\(filename)"
             completion(imageUrl)
         }
         task.resume()
     }
-
-     func postDataToFirestore(collection: String, data: [String: Any]) {
+    
+    func postDataToFirestore(collection: String, data: [String: Any]) {
         // Convert parameters to JSON data
         guard let jsonData = try? JSONSerialization.data(withJSONObject: data) else {
             print("Failed to serialize parameters into JSON")
             return
         }
-
+        
         // Construct Firestore URL for posting data
         let firestoreUrl = "\(Firestore.firestoreUrl)\(collection)?key=\(Firestore.apiKey)"
-
+        
         // Create a URL request
         var request = URLRequest(url: URL(string: firestoreUrl)!)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
-
+        
         // Perform the request
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
-                print("Error: \(error?.localizedDescription ?? "Unknown error")")
-                return
-            }
-
+                      print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                      return
+                  }
+            
             if let data = data {
                 // Handle response data if needed
                 if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
@@ -383,7 +385,7 @@ struct ApiManager:LTekApiProtocol{
         }
         task.resume()
     }
-   
+    
 }
 
 struct ActiveStorageAttachmentForeignKey {
@@ -448,3 +450,39 @@ struct ProductForeignKey {
 struct RelationshipManager:GK{
     var friends = [1,2,3,4,5]
 }
+struct Course:GK {
+    var subjects:[Subject]
+}
+struct Subject:GK{
+    var name:String
+    var description:String
+    //var test_duration:Int
+    var chapters:[Chapter]
+}
+struct Chapter:GK{
+    var name:String
+    var description:String
+    var study_chatpter_filename:String
+    var test_chatpter_filename:String
+    var test_questions_limit:Int
+    var quiz:Quiz
+}
+struct Question:GK{
+    var title:String
+    var answers:[Answer]
+    var correct_answers:[Answer]
+    var explaination:String
+    var question_type:Int
+}
+struct Answer:GK {
+    var value:String
+}
+struct Quiz:GK{
+    var questions:[Question]
+}
+
+//Make sure that we can skip questions and be able to pass the quiz and complete the chapter
+//struct Test:GK {
+//    var questions:[Question]
+//}
+

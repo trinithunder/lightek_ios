@@ -9,10 +9,26 @@ import SwiftUI
 
 @main
 struct LightekApp: App {
-    let gateKeeper = Gate_Keeper()
+    @StateObject var gateKeeper = Gate_Keeper()
+    @Environment(\.scenePhase) var phase
     var body: some Scene {
         WindowGroup {
-            LTekLogIn().environmentObject(gateKeeper)
+            ContentView().environmentObject(gateKeeper).onChange(of: phase) { newPhase in
+                switch newPhase {
+                case .active:
+                    print("Active")
+                    gateKeeper.isActive = true
+                case .background:
+                    print("Background")
+                   
+                case .inactive:
+                    print("InActive")
+                    gateKeeper.isActive.toggle()
+                @unknown default:
+                    print("Unknown")
+                }
+                gateKeeper.showBlur = !gateKeeper.isActive
+            }
         }
     }
 }

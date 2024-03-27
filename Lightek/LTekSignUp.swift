@@ -25,7 +25,7 @@ struct LTekSignUp: View {
                                                 isSignUpVisible.toggle()
                                             }label:{
                                                 Image(systemName: "arrow.left")
-                                                    .foregroundColor(.orange)
+                                                    .foregroundColor(Color("AccentColor"))
                                                     .padding(.leading,10)
                                             }
                     Spacer()
@@ -34,7 +34,7 @@ struct LTekSignUp: View {
                     .font(.largeTitle)
                 Group{
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(.orange,lineWidth: 1)
+                        .stroke(Color("AccentColor"),lineWidth: 1)
                         .frame(width:UIScreen.main.bounds.width - 20,height: 44)
                         .overlay(
                             TextField("Email", text: $email)
@@ -44,7 +44,7 @@ struct LTekSignUp: View {
                 }
                 Group{
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke(.orange,lineWidth: 1)
+                        .stroke(Color("AccentColor"),lineWidth: 1)
                         .frame(width:UIScreen.main.bounds.width - 20,height: 44)
                         .overlay(
                             SecureField("Password", text: $password)
@@ -60,7 +60,7 @@ struct LTekSignUp: View {
                         }
                 }label:{
                     RoundedRectangle(cornerRadius: 5)
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color("AccentColor"))
                         .frame(width: UIScreen.main.bounds.width - 20, height: 58)
                         .overlay(Text("Create account")
                                     .foregroundColor(.white)

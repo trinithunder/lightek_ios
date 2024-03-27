@@ -17,14 +17,14 @@ struct LTekPrivacyPolicyView: View {
                 Group{
                     HStack{
                         Spacer()
-                        Text("SNULL is committed to protecting the privacy of our users. This Privacy Policy outlines the types of information we collect, how we use it, and how we protect your privacy.").multilineTextAlignment(.center)
+                        Text("SMULL is committed to protecting the privacy of our users. This Privacy Policy outlines the types of information we collect, how we use it, and how we protect your privacy.").multilineTextAlignment(.center)
                         Spacer()
                     }
                     Text("Information We Collect")
                     Group{
                         HStack{
                             Spacer()
-                            Text("Personal Information: When you create an account on SNULL, we may collect personal information such as your name, email address, and profile picture.").multilineTextAlignment(.center)
+                            Text("Personal Information: When you create an account on SMULL, we may collect personal information such as your name, email address, and profile picture.").multilineTextAlignment(.center)
                             Spacer()
                         }
                     }
