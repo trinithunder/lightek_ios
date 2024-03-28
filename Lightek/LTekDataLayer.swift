@@ -250,7 +250,7 @@ extension User {
     static var productIdIndex: String { "index_users_on_product_id" }
     static var resetPasswordTokenIndex: String { "index_users_on_reset_password_token" }
     static var loggedInIndex:Bool{
-        return true
+        return Gate_Keeper().currentUser != ""
     }
 }
 struct Firestore:GK {
